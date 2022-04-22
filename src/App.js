@@ -1,43 +1,43 @@
 import "./App.css";
 import { Component } from "react";
-import Avocado from "./Avocado";
-import Tomato from "./Tomato";
-import Paris from "./Paris";
-import NYC from "./NYC";
+import axios from "axios";
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      show: true,
-      showCity: true,
-    };
-    console.log("CONSTRUCTOR");
+  state = {
+    person: null,
+  };
+  // async componentDidMount() {
+  //   const url = "https://api.quotable.io/random";
+  //   const response = await fetch(url);
+  //   const data = await response.json();
+  //   this.setState({ content: data.content, author: data.author });
+  // }
+  async componentDidMount() {
+    const url = "https://api.randomuser.me/";
+    const response = await fetch(url);
+    const data = await response.json();
+    this.setState({ person: data.results[0] });
+    console.log(data.results[0]);
   }
 
   render() {
-    console.log("RENDER");
-    const btnText = this.state.show ? "TOMATO" : "AVOCADO";
-    const cityBtn = this.state.showCity ? "NEW YORK" : "PARIS";
-
     return (
       <div className="App">
-        <p>{this.state.show ? <Avocado /> : <Tomato />}</p>
-        <button
-          onClick={() => {
-            this.setState({ show: !this.state.show });
-          }}
-        >
-          {btnText}
-        </button>
-        <p>{this.state.showCity ? <Paris /> : <NYC />}</p>
-        <button
-          onClick={() => {
-            this.setState({ showCity: !this.state.showCity });
-          }}
-        >
-          {cityBtn}
-        </button>
+        {!this.state.person ? (
+          <p>Loading...</p>
+        ) : (
+          <div>
+            <p>First Name: {this.state.person.name.first}</p>
+            <p>Last Name: {this.state.person.name.last}</p>
+            <p>Email: {this.state.person.email}</p>
+            <p>Age: {this.state.person.dob.age}</p>
+            <img
+              src={this.state.person.picture.thumbnail}
+              alt="avatar"
+              width="100px"
+            />
+          </div>
+        )}
       </div>
     );
   }
